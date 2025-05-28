@@ -15,8 +15,27 @@ function mountWidget() {
 
   // Apply our styles within shadow DOM
   const style = document.createElement('style');
-  style.textContent = `@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500&display=swap');`;
+  style.textContent = `
+    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500&display=swap');
+    * {
+      box-sizing: border-box;
+      font-family: 'Inter', sans-serif;
+    }
+    input {
+      background-color: #ffffff !important;
+      color: #333 !important;
+      font-size: 1rem;
+      padding: 0.5rem;
+      border: none;
+      outline: none;
+    }
+    button {
+      font-family: 'Inter', sans-serif;
+      font-weight: 400;
+    }
+  `;
   shadow.appendChild(style);
+
 
   const root = ReactDOM.createRoot(widgetRoot);
   root.render(
