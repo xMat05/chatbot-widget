@@ -104,18 +104,40 @@ export default function Chatbot({ businessId = "demo", primaryColor = "#0D1B2A" 
             <div ref={chatEndRef} />
           </div>
 
-          <div style={{ display: 'flex', borderTop: '1px solid #ddd' }}>
-            <input
-              value={userInput}
-              onChange={e => setUserInput(e.target.value)}
-              onKeyDown={e => e.key === "Enter" && handleSend()}
-              placeholder="Type a message..."
-              style={{ flex: 1, padding: '0.5rem', border: 'none' }}
-            />
-            <button onClick={handleSend} style={{ padding: '0.5rem', background: primaryColor, color: 'white', border: 'none' }}>
-              ➤
-            </button>
-          </div>
+          <div>
+  <div style={{ display: 'flex', borderTop: '1px solid #ddd' }}>
+    <input
+      value={userInput}
+      onChange={e => setUserInput(e.target.value)}
+      onKeyDown={e => e.key === "Enter" && handleSend()}
+      placeholder="Type a message..."
+      style={{ flex: 1, padding: '0.5rem', border: 'none' }}
+    />
+    <button
+      onClick={handleSend}
+      style={{
+        padding: '0.5rem',
+        background: primaryColor,
+        color: 'white',
+        border: 'none'
+      }}
+    >
+      ➤
+    </button>
+  </div>
+
+  <div style={{
+    fontSize: '0.75rem',
+    textAlign: 'center',
+    padding: '0.4rem 0',
+    color: '#999',
+    background: '#f9f9f9',
+    borderTop: '1px solid #eee'
+  }}>
+    Powered by <strong style={{ color: '#333' }}>Locail</strong>
+  </div>
+</div>
+
         </div>
       )}
     </>
