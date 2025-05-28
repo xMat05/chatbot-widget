@@ -1,31 +1,36 @@
 import React from 'react';
-import { createRoot } from 'react-dom/client';
-import Chatbot from './Chatbot.jsx';
+import ReactDOM from 'react-dom/client';
+import Chatbot from './Chatbot';
 
-const script = document.currentScript;
-const businessId = script?.dataset?.businessId || "demo";
-const primaryColor = script?.dataset?.primaryColor || "#0D1B2A";
-const secondaryColor = script?.dataset?.secondaryColor || "#ffffff";
-const chatBackground = script?.dataset?.chatBackground || "#ffffff";
-const position = script?.dataset?.position || "right";
-const design = script?.dataset?.design || "rounded";
+function mountWidget() {
+  const script = document.currentScript;
+  const container = document.createElement('div');
+  const shadow = container.attachShadow({ mode: 'open' });
 
-const container = document.createElement('div');
-container.id = "chatbot-widget-container";
-document.body.appendChild(container);
+  const widgetRoot = document.createElement('div');
+  shadow.appendChild(widgetRoot);
 
-const shadow = container.attachShadow({ mode: 'open' });
-const shadowDiv = document.createElement('div');
-shadow.appendChild(shadowDiv);
+  // Append our container to body
+  document.body.appendChild(container);
 
-const root = createRoot(shadowDiv);
-root.render(
-  <Chatbot
-    businessId={businessId}
-    primaryColor={primaryColor}
-    secondaryColor={secondaryColor}
-    chatBackground={chatBackground}
-    position={position}
-    design={design}
-  />
-);
+  // Apply our styles within shadow DOM
+  const style = document.createElement('style');
+  style.textContent = `@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500&display=swap');`;
+  shadow.appendChild(style);
+
+  const root = ReactDOM.createRoot(widgetRoot);
+  root.render(
+    <Chatbot
+      businessId={script.dataset.businessId}
+      primaryColor={script.dataset.primaryColor}
+      secondaryColor={script.dataset.secondaryColor}
+      chatBackground={script.dataset.chatBackground}
+      position={script.dataset.position}
+      design={script.dataset.design}
+    />
+  );
+}
+
+if (document.currentScript) {
+  mountWidget();
+}
