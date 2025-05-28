@@ -217,7 +217,13 @@ export default function Chatbot({
                   flex: 1,
                   padding: '0.5rem',
                   border: 'none',
-                  fontFamily: "'Inter', sans-serif"
+                  outline: 'none',
+                  fontFamily: 'Inter, sans-serif',
+                  fontWeight: 400,
+                  backgroundColor: '#ffffff',
+                  color: '#333',
+                  fontSize: '1rem',
+                  boxSizing: 'border-box'
                 }}
               />
               <button
