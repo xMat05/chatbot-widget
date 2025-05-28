@@ -10,8 +10,8 @@ export default function Chatbot({
   primaryColor = "#0D1B2A",
   secondaryColor = "#ffffff",
   chatBackground = "#ffffff",
-  position = "right", // left, center, right
-  design = "rounded"  // rounded, square
+  position = "right",
+  design = "rounded"
 }) {
   const [isChatOpen, setIsChatOpen] = useState(false);
   const [messages, setMessages] = useState([]);
@@ -22,8 +22,8 @@ export default function Chatbot({
 
   const sessionId = useChatSessionId();
   const chatEndRef = useRef(null);
+  const inputRef = useRef(null);
 
-  // Load Inter font globally (critical for embedding)
   useEffect(() => {
     const link = document.createElement("link");
     link.href = "https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500&display=swap";
@@ -87,7 +87,7 @@ export default function Chatbot({
         setChatHeight(Math.max(300, startHeight - deltaY));
       } else if (direction === 'top-middle') {
         setChatHeight(Math.max(300, startHeight - deltaY));
-        setChatWidth(Math.max(250, startWidth - deltaY * 2)); // expands horizontally
+        setChatWidth(Math.max(250, startWidth - deltaY * 2));
       }
     };
 
@@ -207,14 +207,22 @@ export default function Chatbot({
           </div>
 
           <div>
-            <div style={{ display: 'flex', borderTop: '1px solid #ddd' }}>
-              <input
+            <div style={{ display: 'flex', borderTop: '1px solid #ddd', padding: '0.5rem' }}>
+              <textarea
+                ref={inputRef}
                 value={userInput}
-                onChange={e => setUserInput(e.target.value)}
-                onKeyDown={e => e.key === "Enter" && handleSend()}
+                onChange={(e) => {
+                  setUserInput(e.target.value);
+                  e.target.style.height = 'auto';
+                  e.target.style.height = `${e.target.scrollHeight}px`;
+                }}
+                onKeyDown={(e) => e.key === 'Enter' && !e.shiftKey && (e.preventDefault(), handleSend())}
                 placeholder="Type a message..."
+                rows={1}
                 style={{
                   flex: 1,
+                  resize: 'none',
+                  overflow: 'hidden',
                   padding: '0.5rem',
                   border: 'none',
                   outline: 'none',
@@ -223,18 +231,24 @@ export default function Chatbot({
                   backgroundColor: '#ffffff',
                   color: '#333',
                   fontSize: '1rem',
-                  boxSizing: 'border-box'
+                  borderRadius: '8px',
+                  lineHeight: 1.4,
+                  maxHeight: '120px',
+                  transition: 'height 0.2s ease'
                 }}
               />
               <button
                 onClick={handleSend}
                 style={{
+                  marginLeft: '0.5rem',
                   padding: '0.5rem',
                   background: primaryColor,
                   color: secondaryColor,
                   border: 'none',
                   fontFamily: "'Inter', sans-serif",
-                  fontWeight: 400
+                  fontWeight: 400,
+                  cursor: 'pointer',
+                  borderRadius: '8px'
                 }}
               >
                 ➤
