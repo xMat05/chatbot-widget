@@ -9,9 +9,7 @@ function useChatSessionId() {
   return sessionId;
 }
 
-
 export default function Chatbot({
-
   // Widget configuration props (can be customized by clients via script tag)
   businessId = "demo",
   primaryColor = "#0D1B2A",
@@ -26,21 +24,22 @@ export default function Chatbot({
 }) {
 
   // Chat UI state
-  const [isChatOpen, setIsChatOpen] = useState(false); // Tracks widget open/close state
-  const [messages, setMessages] = useState([]); // Chat history (user + assistant)
-  const [userInput, setUserInput] = useState(""); // Current user input text
-  const [isTyping, setIsTyping] = useState(false); // 'Typing' indicator toggle
+  const [isChatOpen, setIsChatOpen] = useState(false);
+  const [messages, setMessages] = useState([]);
+  const [userInput, setUserInput] = useState("");
+  const [isTyping, setIsTyping] = useState(false);
 
-  // Chat widget dimentions
+  // Chat widget dimensions
   const [chatWidth, setChatWidth] = useState(300);
   const [chatHeight, setChatHeight] = useState(400);
-  
-  // Refs for scrolling + input behavior and sessionId handling
+
+  // Refs for DOM elements and session handling
   const sessionId = useChatSessionId();
   const chatEndRef = useRef(null);
   const inputRef = useRef(null);
+  const chatBoxRef = useRef(null); // Ref for applying bounce animation to chat container
 
-    /** 
+  /** 
    * Loads the 'Inter' font into the document.
    * Ensures consistent typography regardless of site it's embedded into.
    */
@@ -51,7 +50,7 @@ export default function Chatbot({
     document.head.appendChild(link);
   }, []);
 
-    /**
+  /**
    * Automatically scrolls to the newest message.
    * Keeps conversation view pinned to latest message.
    */
@@ -61,6 +60,16 @@ export default function Chatbot({
     }
   }, [messages]);
 
+  /**
+   * Utility to apply the bounce animation by toggling the CSS class.
+   * Used when the user tries to resize beyond allowed limits.
+   */
+  const triggerBounce = (element) => {
+    if (!element) return;
+    element.classList.remove('bounce'); // Reset animation
+    void element.offsetWidth; // Force reflow
+    element.classList.add('bounce');   // Re-add class to trigger animation
+  };
 
   /**
    * Sends user message to the serverless proxy endpoint (Cloudflare).
@@ -101,6 +110,7 @@ export default function Chatbot({
   /**
    * Initiates drag-to-resize behavior based on widget alignment.
    * Uses mouse movement change to dynamically update chat dimensions.
+   * Applies bounce animation if limits are exceeded.
    */
   const startResize = (e, direction) => {
     e.preventDefault();
@@ -113,15 +123,38 @@ export default function Chatbot({
       const deltaX = moveEvent.clientX - startX;
       const deltaY = moveEvent.clientY - startY;
 
+      const MAX_WIDTH = 600;
+      const MAX_HEIGHT = 700;
+      const MIN_WIDTH = 250;
+      const MIN_HEIGHT = 300;
+
+      let newWidth, newHeight;
+
       if (direction === 'top-left') {
-        setChatWidth(Math.max(250, startWidth - deltaX));
-        setChatHeight(Math.max(300, startHeight - deltaY));
+        newWidth = startWidth - deltaX;
+        newHeight = startHeight - deltaY;
       } else if (direction === 'top-right') {
-        setChatWidth(Math.max(250, startWidth + deltaX));
-        setChatHeight(Math.max(300, startHeight - deltaY));
+        newWidth = startWidth + deltaX;
+        newHeight = startHeight - deltaY;
       } else if (direction === 'top-middle') {
-        setChatHeight(Math.max(300, startHeight - deltaY));
-        setChatWidth(Math.max(250, startWidth - deltaY * 2));
+        newHeight = startHeight - deltaY;
+        newWidth = startWidth - deltaY * 2;
+      }
+
+      if (newWidth !== undefined) {
+        const clampedWidth = Math.min(Math.max(newWidth, MIN_WIDTH), MAX_WIDTH);
+        if (clampedWidth !== newWidth && chatBoxRef.current) {
+          triggerBounce(chatBoxRef.current);
+        }
+        setChatWidth(clampedWidth);
+      }
+
+      if (newHeight !== undefined) {
+        const clampedHeight = Math.min(Math.max(newHeight, MIN_HEIGHT), MAX_HEIGHT);
+        if (clampedHeight !== newHeight && chatBoxRef.current) {
+          triggerBounce(chatBoxRef.current);
+        }
+        setChatHeight(clampedHeight);
       }
     };
 
@@ -134,7 +167,7 @@ export default function Chatbot({
     window.addEventListener('mouseup', stopResize);
   };
 
-    /**
+  /**
    * Determines which corner/edge the drag handle appears on.
    * Position is adaptive based on alignment (left, right, center).
    */
@@ -154,14 +187,8 @@ export default function Chatbot({
     }
   })();
 
-  // Used for borderRadius control (square or rounded styling)
   const boxRadius = design === 'rounded' ? '10px' : '0px';
 
-
-  /**
-   * Widget trigger button shown when chat is closed.
-   * Fully responsive and customizable via props.
-   */
   const triggerStyle = {
     position: 'fixed',
     bottom: '1rem',
@@ -191,21 +218,24 @@ export default function Chatbot({
     zIndex: 9999
   };
 
-
-  
   return (
     <>
       {!isChatOpen && (
-        <button onClick={() => {
-          setIsChatOpen(true);
-          setMessages([{ role: "assistant", content: openingMessage }]);
-        }} style={triggerStyle}>
+        <button
+          onClick={() => {
+            setIsChatOpen(true);
+            setMessages([{ role: "assistant", content: openingMessage }]);
+          }}
+          style={triggerStyle}
+        >
           {buttonText}
         </button>
       )}
 
       {isChatOpen && (
         <div
+          ref={chatBoxRef} 
+          className=""
           style={{
             position: 'fixed',
             bottom: '1rem',
@@ -226,6 +256,7 @@ export default function Chatbot({
             fontFamily: "'Inter', sans-serif"
           }}
         >
+          {/* Header */}
           <div style={{
             background: primaryColor,
             color: secondaryColor,
@@ -248,6 +279,7 @@ export default function Chatbot({
             </button>
           </div>
 
+          {/* Message window */}
           <div style={{ flex: 1, padding: '0.5rem', overflowY: 'auto' }}>
             {messages.map((msg, idx) => (
               <div key={idx} style={{ textAlign: msg.role === "user" ? "right" : "left", margin: '0.25rem 0' }}>
@@ -268,6 +300,7 @@ export default function Chatbot({
             <div ref={chatEndRef} />
           </div>
 
+          {/* Input area */}
           <div>
             <div style={{ display: 'flex', borderTop: '1px solid #ddd', padding: '0.5rem' }}>
               <textarea
@@ -329,6 +362,7 @@ export default function Chatbot({
             </div>
           </div>
 
+          {/* Resize drag handle */}
           <div
             onMouseDown={(e) =>
               startResize(

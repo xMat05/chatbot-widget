@@ -38,6 +38,15 @@ function mountWidget() {
       font-family: 'Inter', sans-serif;
       font-weight: 400;
     }
+    @keyframes bounce {
+      0%   { transform: scale(1); }
+      20%  { transform: scale(1.02); }
+      50%  { transform: scale(0.98); }
+      100% { transform: scale(1); }
+    }
+    .bounce {
+      animation: bounce 0.3s ease;
+    }  
   `;
   shadow.appendChild(style); // Scoped styles ensure no conflict with host site CSS
 
