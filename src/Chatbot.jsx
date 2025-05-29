@@ -11,7 +11,11 @@ export default function Chatbot({
   secondaryColor = "#ffffff",
   chatBackground = "#ffffff",
   position = "right",
-  design = "rounded"
+  design = "rounded",
+  headerText = "Chat with us!",
+  buttonText = "💬 Chat",
+  openingMessage = "How can I assist you today?",
+  isMobile = false
 }) {
   const [isChatOpen, setIsChatOpen] = useState(false);
   const [messages, setMessages] = useState([]);
@@ -121,12 +125,26 @@ export default function Chatbot({
   const triggerStyle = {
     position: 'fixed',
     bottom: '1rem',
-    ...(position === 'left' ? { left: '1rem' } : position === 'center' ? { left: '50%', transform: 'translateX(-50%)' } : { right: '1rem' }),
+    ...(position === 'left'
+      ? { left: '1rem' }
+      : position === 'center'
+      ? { left: '50%', transform: 'translateX(-50%)' }
+      : { right: '1rem' }),
     backgroundColor: primaryColor,
     color: secondaryColor,
     fontFamily: "'Inter', sans-serif",
-    fontWeight: 300,
-    padding: '0.75rem 1rem',
+    fontWeight: 500,
+    fontSize: isMobile ? '0.95rem' : '1.2rem',
+    padding: isMobile ? '0.65rem 1rem' : '1rem 2rem',
+    minWidth: isMobile ? '120px' : '140px',
+    minHeight: isMobile ? '48px' : '60px',
+    whiteSpace: 'nowrap',
+    overflow: 'hidden',
+    textOverflow: 'ellipsis',
+    textAlign: 'center',
+    display: 'inline-flex',
+    alignItems: 'center',
+    justifyContent: 'center',
     border: 'none',
     borderRadius: design === 'rounded' ? '20px' : '4px',
     cursor: 'pointer',
@@ -138,9 +156,9 @@ export default function Chatbot({
       {!isChatOpen && (
         <button onClick={() => {
           setIsChatOpen(true);
-          setMessages([{ role: "assistant", content: "How can I assist you today?" }]);
+          setMessages([{ role: "assistant", content: openingMessage }]);
         }} style={triggerStyle}>
-          💬 Chat
+          {buttonText}
         </button>
       )}
 
@@ -149,7 +167,11 @@ export default function Chatbot({
           style={{
             position: 'fixed',
             bottom: '1rem',
-            ...(position === 'left' ? { left: '1rem' } : position === 'center' ? { left: '50%', transform: 'translateX(-50%)' } : { right: '1rem' }),
+            ...(position === 'left'
+              ? { left: '1rem' }
+              : position === 'center'
+              ? { left: '50%', transform: 'translateX(-50%)' }
+              : { right: '1rem' }),
             width: `${chatWidth}px`,
             height: `${chatHeight}px`,
             background: chatBackground,
@@ -168,10 +190,8 @@ export default function Chatbot({
             padding: '0.75rem',
             fontWeight: 500
           }}>
-            <strong>Chat with us!</strong>
+            <strong>{headerText}</strong>
             <button
-              aria-label="Close chat"
-              title="Close"
               onClick={() => setIsChatOpen(false)}
               style={{
                 float: 'right',
@@ -181,7 +201,9 @@ export default function Chatbot({
                 fontSize: '1rem',
                 cursor: 'pointer'
               }}
-            >×</button>
+            >
+              ×
+            </button>
           </div>
 
           <div style={{ flex: 1, padding: '0.5rem', overflowY: 'auto' }}>
@@ -200,9 +222,7 @@ export default function Chatbot({
                 </span>
               </div>
             ))}
-            {isTyping && (
-              <div style={{ fontStyle: 'italic', color: '#aaa', padding: '0.25rem 0' }}>Typing...</div>
-            )}
+            {isTyping && <div style={{ fontStyle: 'italic', color: '#aaa', padding: '0.25rem 0' }}>Typing...</div>}
             <div ref={chatEndRef} />
           </div>
 
@@ -269,10 +289,14 @@ export default function Chatbot({
 
           <div
             onMouseDown={(e) =>
-              startResize(e,
-                position === 'left' ? 'top-right' :
-                position === 'right' ? 'top-left' :
-                'top-middle')
+              startResize(
+                e,
+                position === 'left'
+                  ? 'top-right'
+                  : position === 'right'
+                  ? 'top-left'
+                  : 'top-middle'
+              )
             }
             style={dragHandleStyle}
           />

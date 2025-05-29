@@ -9,11 +9,8 @@ function mountWidget() {
 
   const widgetRoot = document.createElement('div');
   shadow.appendChild(widgetRoot);
-
-  // Append our container to body
   document.body.appendChild(container);
 
-  // Apply our styles within shadow DOM
   const style = document.createElement('style');
   style.textContent = `
     @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500&display=swap');
@@ -21,7 +18,7 @@ function mountWidget() {
       box-sizing: border-box;
       font-family: 'Inter', sans-serif;
     }
-    input {
+    input, textarea {
       background-color: #ffffff !important;
       color: #333 !important;
       font-size: 1rem;
@@ -36,6 +33,7 @@ function mountWidget() {
   `;
   shadow.appendChild(style);
 
+  const isMobile = window.matchMedia("(max-width: 768px)").matches;
 
   const root = ReactDOM.createRoot(widgetRoot);
   root.render(
@@ -46,6 +44,10 @@ function mountWidget() {
       chatBackground={script.dataset.chatBackground}
       position={script.dataset.position}
       design={script.dataset.design}
+      headerText={script.dataset.headerText}
+      buttonText={script.dataset.buttonText}
+      openingMessage={script.dataset.openingMessage}
+      isMobile={isMobile} // ✅ pass this prop
     />
   );
 }
