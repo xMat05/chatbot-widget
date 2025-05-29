@@ -358,7 +358,7 @@ export default function Chatbot({
               borderTop: '1px solid #eee',
               fontWeight: 300
             }}>
-              Powered by <strong style={{ color: '#333' }}>LocAiL</strong>
+              Powered by <strong style={{ color: '#333' }}>LOCAiL</strong>
             </div>
           </div>
 
