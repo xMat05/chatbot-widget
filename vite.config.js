@@ -8,7 +8,7 @@ export default defineConfig({
     'process.env': {}
   },
   build: {
-    outDir: 'docs',
+    outDir: 'docs', //runs from docs folder
     emptyOutDir: true,
     lib: {
       entry: 'src/widget.jsx',

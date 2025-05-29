@@ -1,33 +1,49 @@
 import { useState, useEffect, useRef } from 'react';
 
+/** 
+ * Generates a persistent session ID per user session.
+ * Ensures continuity across message history with backend (n8n workflow).
+ */
 function useChatSessionId() {
   const [sessionId] = useState(() => crypto.randomUUID());
   return sessionId;
 }
 
+
 export default function Chatbot({
+
+  // Widget configuration props (can be customized by clients via script tag)
   businessId = "demo",
   primaryColor = "#0D1B2A",
   secondaryColor = "#ffffff",
   chatBackground = "#ffffff",
-  position = "right",
-  design = "rounded",
+  position = "right", // Accepts: "left", "center", "right"
+  design = "rounded", // Accepts: "rounded" or "square"
   headerText = "Chat with us!",
   buttonText = "💬 Chat",
   openingMessage = "How can I assist you today?",
-  isMobile = false
+  isMobile = false // Used for responsive styling adjustments for mobile devices
 }) {
-  const [isChatOpen, setIsChatOpen] = useState(false);
-  const [messages, setMessages] = useState([]);
-  const [userInput, setUserInput] = useState("");
-  const [isTyping, setIsTyping] = useState(false);
+
+  // Chat UI state
+  const [isChatOpen, setIsChatOpen] = useState(false); // Tracks widget open/close state
+  const [messages, setMessages] = useState([]); // Chat history (user + assistant)
+  const [userInput, setUserInput] = useState(""); // Current user input text
+  const [isTyping, setIsTyping] = useState(false); // 'Typing' indicator toggle
+
+  // Chat widget dimentions
   const [chatWidth, setChatWidth] = useState(300);
   const [chatHeight, setChatHeight] = useState(400);
-
+  
+  // Refs for scrolling + input behavior and sessionId handling
   const sessionId = useChatSessionId();
   const chatEndRef = useRef(null);
   const inputRef = useRef(null);
 
+    /** 
+   * Loads the 'Inter' font into the document.
+   * Ensures consistent typography regardless of site it's embedded into.
+   */
   useEffect(() => {
     const link = document.createElement("link");
     link.href = "https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500&display=swap";
@@ -35,12 +51,22 @@ export default function Chatbot({
     document.head.appendChild(link);
   }, []);
 
+    /**
+   * Automatically scrolls to the newest message.
+   * Keeps conversation view pinned to latest message.
+   */
   useEffect(() => {
     if (chatEndRef.current) {
       chatEndRef.current.scrollIntoView({ behavior: "smooth" });
     }
   }, [messages]);
 
+
+  /**
+   * Sends user message to the serverless proxy endpoint (Cloudflare).
+   * Pushes the user message before awaiting response.
+   * Falls back to error message if fetch fails or backend is unreachable.
+   */
   const handleSend = async () => {
     if (!userInput.trim()) return;
     const newMessages = [...messages, { role: "user", content: userInput }];
@@ -72,6 +98,10 @@ export default function Chatbot({
     }
   };
 
+  /**
+   * Initiates drag-to-resize behavior based on widget alignment.
+   * Uses mouse movement change to dynamically update chat dimensions.
+   */
   const startResize = (e, direction) => {
     e.preventDefault();
     const startX = e.clientX;
@@ -104,6 +134,10 @@ export default function Chatbot({
     window.addEventListener('mouseup', stopResize);
   };
 
+    /**
+   * Determines which corner/edge the drag handle appears on.
+   * Position is adaptive based on alignment (left, right, center).
+   */
   const dragHandleStyle = (() => {
     const base = {
       position: 'absolute',
@@ -120,8 +154,14 @@ export default function Chatbot({
     }
   })();
 
+  // Used for borderRadius control (square or rounded styling)
   const boxRadius = design === 'rounded' ? '10px' : '0px';
 
+
+  /**
+   * Widget trigger button shown when chat is closed.
+   * Fully responsive and customizable via props.
+   */
   const triggerStyle = {
     position: 'fixed',
     bottom: '1rem',
@@ -151,6 +191,8 @@ export default function Chatbot({
     zIndex: 9999
   };
 
+
+  
   return (
     <>
       {!isChatOpen && (
