@@ -2,13 +2,13 @@ import { defineConfig } from 'vite';
 import react from '@vitejs/plugin-react';
 
 export default defineConfig({
-  base: "/chatbot-widget/", // matches GitHub repo name
+  base: "/chatbot-widget/", 
   plugins: [react()],
   define: {
     'process.env': {}
   },
   build: {
-    outDir: 'docs',          // 👈 GitHub Pages will serve this!
+    outDir: 'docs',
     emptyOutDir: true,
     lib: {
       entry: 'src/widget.jsx',
