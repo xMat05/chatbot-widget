@@ -66,7 +66,7 @@ function mountWidget() {
       headerText={script.dataset.headerText}
       buttonText={script.dataset.buttonText}
       openingMessage={script.dataset.openingMessage}
-      isMobile={isMobile} // ✅ pass this prop
+      isMobile={isMobile}
     />
   );
 }

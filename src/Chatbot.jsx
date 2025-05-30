@@ -21,7 +21,7 @@ export default function Chatbot({
   buttonText = "💬 Chat",
   openingMessage = "How can I assist you today?",
   isMobile = false // Used for responsive styling adjustments for mobile devices
-}) {
+  }) {
 
   // Chat UI state
   const [isChatOpen, setIsChatOpen] = useState(false);
