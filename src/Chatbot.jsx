@@ -292,10 +292,10 @@ export default function Chatbot({
                     borderRadius: '12px',
                     maxWidth: '80%',
                     fontWeight: 400,
-                    whiteSpace: 'pre-wrap', // handles line breaks
+                    whiteSpace: 'pre-wrap', 
                   }}
                 >
-                  {msg.content}
+                  {msg.content.replace(/\\n/g, '\n')}
                 </span>
               </div>
             ))}
