@@ -283,15 +283,18 @@ export default function Chatbot({
           <div style={{ flex: 1, padding: '0.5rem', overflowY: 'auto' }}>
             {messages.map((msg, idx) => (
               <div key={idx} style={{ textAlign: msg.role === "user" ? "right" : "left", margin: '0.25rem 0' }}>
-                <span style={{
-                  display: 'inline-block',
-                  background: msg.role === "user" ? primaryColor : '#eee',
-                  color: msg.role === "user" ? secondaryColor : '#333',
-                  padding: '0.5rem',
-                  borderRadius: '12px',
-                  maxWidth: '80%',
-                  fontWeight: 400
-                }}>
+                <span
+                  style={{
+                    display: 'inline-block',
+                    background: msg.role === "user" ? primaryColor : '#eee',
+                    color: msg.role === "user" ? secondaryColor : '#333',
+                    padding: '0.5rem',
+                    borderRadius: '12px',
+                    maxWidth: '80%',
+                    fontWeight: 400,
+                    whiteSpace: 'pre-wrap', // handles line breaks
+                  }}
+                >
                   {msg.content}
                 </span>
               </div>
