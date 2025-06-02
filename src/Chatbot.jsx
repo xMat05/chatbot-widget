@@ -319,14 +319,16 @@ export default function Chatbot({
               <div key={idx} style={{ textAlign: msg.role === "user" ? "right" : "left", margin: '0.25rem 0' }}>
                 <span
                   style={{
-                    display: 'inline-block',
+                    display: 'block',
                     background: msg.role === "user" ? primaryColor : '#eee',
                     color: msg.role === "user" ? secondaryColor : '#333',
                     padding: '0.5rem',
                     borderRadius: '12px',
                     maxWidth: '80%',
                     fontWeight: 400,
-                    whiteSpace: 'pre-wrap', 
+                    whiteSpace: 'pre-wrap',
+                    marginLeft: msg.role === "user" ? 'auto' : '0', // Add this line
+                    marginRight: msg.role === "assistant" ? 'auto' : '0'
                   }}
                 >
                   {msg.content.replace(/\\n/g, '\n')}
