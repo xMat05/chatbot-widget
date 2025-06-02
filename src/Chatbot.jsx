@@ -68,6 +68,22 @@ export default function Chatbot({
     }
   }, [messages]);
 
+
+  // On first load: Load stored chat history from sessionStorage (if any)
+  useEffect(() => {
+    const cached = sessionStorage.getItem("chatbot-history");
+    if (cached) {
+      setMessages(JSON.parse(cached));
+    }
+  }, []);
+
+  // Every time messages change: Save to sessionStorage
+  useEffect(() => {
+    sessionStorage.setItem("chatbot-history", JSON.stringify(messages));
+  }, [messages]);
+
+
+
   /**
    * Utility to apply the bounce animation by toggling the CSS class.
    * Used when the user tries to resize beyond allowed limits.
@@ -102,7 +118,7 @@ export default function Chatbot({
       setTimeout(() => {
         setMessages((prev) => [...prev, {
           role: "assistant",
-          content: data.reply || "No response. Please call or email."
+          content: data.reply || "No response. Please call or email." 
         }]);
         setIsTyping(false);
       }, 1000);
@@ -232,7 +248,10 @@ export default function Chatbot({
         <button
           onClick={() => {
             setIsChatOpen(true);
-            setMessages([{ role: "assistant", content: openingMessage }]);
+            if (messages.length === 0) {
+              setMessages([{ role: "assistant", content: openingMessage }]);
+}
+
           }}
           style={triggerStyle}
         >
