@@ -249,13 +249,17 @@ export default function Chatbot({
         <button
           onClick={() => {
             setIsChatOpen(true);
-              if (!hasShownOpening.current && messages.length === 0) {
-              setMessages([{ role: "assistant", content: openingMessage }]);
+
+            const cached = sessionStorage.getItem("chatbot-history");
+
+            if (!hasShownOpening.current && (!cached || JSON.parse(cached).length === 0)) {
+              const opening = [{ role: "assistant", content: openingMessage }];
+              setMessages(opening);
+              sessionStorage.setItem("chatbot-history", JSON.stringify(opening));
               hasShownOpening.current = true;
             }
-
-
           }}
+
           style={triggerStyle}
         >
           {buttonText}
