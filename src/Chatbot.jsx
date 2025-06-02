@@ -5,9 +5,17 @@ import { useState, useEffect, useRef } from 'react';
  * Ensures continuity across message history with backend (n8n workflow).
  */
 function useChatSessionId() {
-  const [sessionId] = useState(() => crypto.randomUUID());
+  const [sessionId] = useState(() => {
+    const stored = localStorage.getItem("chatbot-session-id");
+    if (stored) return stored;
+    const newId = crypto.randomUUID();
+    localStorage.setItem("chatbot-session-id", newId);
+    return newId;
+  });
+
   return sessionId;
 }
+
 
 export default function Chatbot({
   // Widget configuration props (can be customized by clients via script tag)
