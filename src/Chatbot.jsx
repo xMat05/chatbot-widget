@@ -31,6 +31,7 @@ export default function Chatbot({
   isMobile = false // Used for responsive styling adjustments for mobile devices
   }) {
 
+  const hasShownOpening = useRef(false);
   // Chat UI state
   const [isChatOpen, setIsChatOpen] = useState(false);
   const [messages, setMessages] = useState([]);
@@ -248,9 +249,11 @@ export default function Chatbot({
         <button
           onClick={() => {
             setIsChatOpen(true);
-            if (messages.length === 0) {
+              if (!hasShownOpening.current && messages.length === 0) {
               setMessages([{ role: "assistant", content: openingMessage }]);
-}
+              hasShownOpening.current = true;
+            }
+
 
           }}
           style={triggerStyle}
