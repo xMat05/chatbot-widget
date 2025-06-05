@@ -194,7 +194,7 @@ export default function Chatbot({
 
   /**
    * Determines which corner/edge the drag handle appears on.
-   * Position is adaptive based on alignment (left, right, center).
+   * Position is adaptive based on alignment (left, right, center)
    */
   const dragHandleStyle = (() => {
     const base = {
@@ -336,6 +336,7 @@ export default function Chatbot({
                 </div>
               </div>
             ))}
+
 
             {isTyping && <div style={{ fontStyle: 'italic', color: '#aaa', padding: '0.25rem 0' }}>Typing...</div>}
             <div ref={chatEndRef} />
