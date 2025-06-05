@@ -346,7 +346,7 @@ You might need to use a local HTTP server (instead of file://): https://react.de
     }  
     .chat-message {
       display: inline-block;
-      max-width: 90%;
+      max-width: 75%;
       white-space: pre-wrap;
       word-break: break-word;
       padding: 0.5rem;
