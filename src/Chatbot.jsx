@@ -317,7 +317,6 @@ export default function Chatbot({
           <div style={{ flex: 1, padding: '0.5rem', overflowY: 'auto' }}>
             {messages.map((msg, idx) => (
               <div
-                key={idx}
                 style={{
                   display: 'flex',
                   justifyContent: msg.role === "user" ? "flex-end" : "flex-start",
@@ -325,21 +324,16 @@ export default function Chatbot({
                 }}
               >
                 <div
+                  className="chat-message"
                   style={{
                     background: msg.role === "user" ? primaryColor : '#eee',
-                    color: msg.role === "user" ? secondaryColor : '#333',
-                    padding: '0.5rem',
-                    borderRadius: '12px',
-                    fontWeight: 400,
-                    whiteSpace: 'pre-wrap',
-                    display: 'inline-block',
-                    maxWidth: '90%', // Optional cap to avoid stretching
-                    wordBreak: 'break-word'
+                    color: msg.role === "user" ? secondaryColor : '#333'
                   }}
                 >
                   {msg.content.replace(/\\n/g, '\n')}
                 </div>
               </div>
+
             ))}
 
             {isTyping && <div style={{ fontStyle: 'italic', color: '#aaa', padding: '0.25rem 0' }}>Typing...</div>}

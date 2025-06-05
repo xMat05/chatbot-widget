@@ -46,7 +46,16 @@ function mountWidget() {
     }
     .bounce {
       animation: bounce 0.3s ease;
-    }  
+    }  .chat-message {
+      display: inline-block;
+      max-width: 90%;
+      white-space: pre-wrap;
+      word-break: break-word;
+      padding: 0.5rem;
+      border-radius: 12px;
+      font-weight: 400;
+    }
+
   `;
   shadow.appendChild(style); // Scoped styles ensure no conflict with host site CSS
 
