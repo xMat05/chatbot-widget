@@ -337,7 +337,6 @@ export default function Chatbot({
               </div>
             ))}
 
-
             {isTyping && <div style={{ fontStyle: 'italic', color: '#aaa', padding: '0.25rem 0' }}>Typing...</div>}
             <div ref={chatEndRef} />
           </div>
