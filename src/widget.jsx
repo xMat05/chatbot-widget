@@ -46,7 +46,8 @@ function mountWidget() {
     }
     .bounce {
       animation: bounce 0.3s ease;
-    }  .chat-message {
+    }  
+    .chat-message {
       display: inline-block;
       max-width: 90%;
       white-space: pre-wrap;
